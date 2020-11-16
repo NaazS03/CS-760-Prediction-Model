@@ -1,0 +1,4 @@
+*.idea
+data/COVID-19_Case_Surveillance_Public_Use_Data.csv
+data/Covid_Race_Death_Numerical_Data.csv
+*.joblib
