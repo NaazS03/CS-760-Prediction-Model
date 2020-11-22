@@ -4,3 +4,4 @@ data/Covid_Race_Death_Numerical_Data.csv
 *.joblib
 twitter_data_processing/twitter_key.txt
 twitter_data_processing/tweet_logs/
+*.csv
