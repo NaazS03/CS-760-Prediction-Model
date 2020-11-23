@@ -5,14 +5,15 @@ import calendar #so we can process month abbreviations
 import fnmatch
 import os
 import datetime
+import json
 
 
 #Starting date to keep values
 startDate = '04/01/2020'
 
 #Ending date to keep values
-#endDate = '11/20/2020'
-endDate = '05/01/2020'
+endDate = '11/20/2020'
+#endDate = '04/03/2020'
 
 #Dictionary mapping months to month strings
 monthAbbr = {
@@ -68,12 +69,6 @@ weirdLocations = [
 ]
 df.drop(df.loc[df['state'].isin(weirdLocations)].index, inplace=True)
 
-#Specify twitter log directory
-twitterDir = '../data/tweet_logs/tweet_logs_data_apr01_nov20/'
-
-#Initialize the Twitter API Object
-twarc = Twarc()
-
 #Initialize list of all 50 states and the abbreviations
 stateNames = [state.name for state in us.states.STATES]
 stateAbbreviations = [state.abbr for state in us.states.STATES]
@@ -90,16 +85,27 @@ missesMapping = {
     'Portland' : 'OR'
 }
 
+# Opening JSON file 
+allTweets = {}
+with open("../data/tweet_logs/allTweets.json") as json_file: 
+    allTweets = json.load(json_file) 
+
+
 #Iterate through every date
 for date in dates:
+    #Progress bar
     print(date)
+
+    #List to hold the next 14 days
     futureDates = []
+
     #Obtain the month, day, and year of the date
     rawDate = date.split('/')
     month = int(rawDate[0])
     day = int(rawDate[1])
     year = int(rawDate[2])
 
+    #Append the next 14 days to list
     d = datetime.datetime(year,month,day)
     for i in range(1,15):
         d += datetime.timedelta(days=1)
@@ -114,35 +120,12 @@ for date in dates:
         if newFutureDate <= endDate:
             futureDates.append(newFutureDate)
 
-    print(futureDates)
-
-
+    #Dictionary that holds tweet counts for a certain day
     stateCount = {}
 
-    #Find the corresponding twitter file for the date
-    rawDate = date.split('/')
-    month = rawDate[0]
-    monthString = monthAbbr[month]
-    keyString = monthString + str(int(rawDate[1]))
-    fileName = ''
-    for fname in os.listdir(twitterDir):
-        rawFName = fname.split('_')
-        fNameStart = rawFName[0]
-        if keyString == fNameStart:
-            fileName = fname
-    
-    #Verify file name has been set
-    if fileName == '':
-        continue
-
-    #Read the corresponding twitter log
-    dft=pd.read_csv(twitterDir + fileName, header=None)
-    dft=dft[0]
-
-    
-
+    tweetsToday = allTweets[date]
     #Iterate through every tweet in the log
-    for tweet in twarc.hydrate(dft):
+    for tweet in tweetsToday:
 
         #Check to see if tweet originated from the US
         if (tweet["coordinates"] 
@@ -192,11 +175,6 @@ for date in dates:
         #Add the tweet count to the next 14 days
         for currDate in futureDates:
             df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "twoWeekTweetSum"] += tweetCount
-
-            
-
-                    
-
 
 
 #Output the final dataframe for analysis
