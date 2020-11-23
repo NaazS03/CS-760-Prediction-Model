@@ -4,6 +4,8 @@ import us #so we can process the US states easily
 import calendar #so we can process month abbreviations
 import fnmatch
 import os
+import datetime
+
 
 #Starting date to keep values
 startDate = '04/01/2020'
@@ -39,6 +41,7 @@ df = df[(df['submission_date'] >= startDate) & (df['submission_date'] <= endDate
 
 #Add tweet count column
 df["tweetCount"] = 0
+df["twoWeekTweetSum"] = 0
 
 
 
@@ -145,13 +148,38 @@ for date in dates:
                         stateCount[state] = 1
     #We now have the tweet count for a specific date
     for state in stateCount:
+        #Store the tweet count in the correct cell
         tweetCount = stateCount[state]
         df.loc[(df["submission_date"] == date) & (df["state"]==state), "tweetCount"] = tweetCount
+
+        #Obtain the month, day, and year of the date
+        rawDate = date.split('/')
+        month = int(rawDate[0])
+        day = int(rawDate[1])
+        year = int(rawDate[2])
+
+        d = datetime.datetime(year,month,day)
+        for i in range(1,15):
+            d += datetime.timedelta(days=1)
+            currMonth = str(d.month)
+            currYear = str(d.year)
+            currDay = str(d.day)
+            if len(currMonth) == 1:
+                currMonth = "0" + currMonth 
+            if len(currDay) == 1:
+                currDay = "0" + currDay
+            currDate = currMonth + "/" + currDay + "/" + currYear
+            if currDate <= endDate:
+                df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "twoWeekTweetSum"] += tweetCount
+            
 
                     
 
 
-        
+#d0 = date(2017, 8, 18)
+#d1 = date(2017, 10, 26)
+#delta = d1 - d0
+#print(delta.days)
     
 
 
