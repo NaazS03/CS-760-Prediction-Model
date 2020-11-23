@@ -5,8 +5,8 @@ import calendar #so we can process month abbreviations
 
 ### Process the data file
 # import original data
-filename = "march20_march21"
-dataframe=pd.read_csv("tweet_logs/" + filename + ".csv", header=None)
+filename = "september19_september20"
+dataframe=pd.read_csv("../data/tweet_logs/" + "tweet_logs_data_apr01_nov20/" + filename + ".csv", header=None)
 
 # grab only first column
 dataframe=dataframe[0]
