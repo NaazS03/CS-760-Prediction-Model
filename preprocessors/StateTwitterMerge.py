@@ -11,8 +11,8 @@ import datetime
 startDate = '04/01/2020'
 
 #Ending date to keep values
-#endDate = '11/20/2020'
-endDate = '05/01/2020'
+endDate = '11/20/2020'
+#endDate = '05/01/2020'
 
 #Dictionary mapping months to month strings
 monthAbbr = {
@@ -60,14 +60,13 @@ df = df.groupby(["submission_date", "state"], as_index=False).agg("sum")
 #Remove US territories other than Puerto Rico and Guam
 weirdLocations = [
     'RMI',
-    'GU'
+    'GU',
     'AS',
     'MP',
     'FSM',
     'PW'
 ]
 df.drop(df.loc[df['state'].isin(weirdLocations)].index, inplace=True)
-
 
 #Specify twitter log directory
 twitterDir = '../data/tweet_logs/tweet_logs_data_apr01_nov20/'
