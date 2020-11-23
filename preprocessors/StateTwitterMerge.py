@@ -11,7 +11,8 @@ import datetime
 startDate = '04/01/2020'
 
 #Ending date to keep values
-endDate = '11/20/2020'
+#endDate = '11/20/2020'
+endDate = '05/01/2020'
 
 #Dictionary mapping months to month strings
 monthAbbr = {
@@ -51,6 +52,22 @@ df["twoWeekTweetSum"] = 0
 dates = df['submission_date'].unique()
 
 
+#Merge NY with NYC
+df.loc[df["state"].str.contains('NY'), "state"] = 'NY'
+df = df.groupby(["submission_date", "state"], as_index=False).agg("sum")
+
+
+#Remove US territories other than Puerto Rico and Guam
+weirdLocations = [
+    'RMI',
+    'GU'
+    'AS',
+    'MP',
+    'FSM',
+    'PW'
+]
+df.drop(df.loc[df['state'].isin(weirdLocations)].index, inplace=True)
+
 
 #Specify twitter log directory
 twitterDir = '../data/tweet_logs/tweet_logs_data_apr01_nov20/'
@@ -77,9 +94,6 @@ missesMapping = {
 #Iterate through every date
 for date in dates:
     print(date)
-    #Create a stopping condition as API will time out
-    if date > '05/01/2020':
-        break
     stateCount = {}
 
     #Find the corresponding twitter file for the date
@@ -174,23 +188,6 @@ for date in dates:
             
 
                     
-
-
-#d0 = date(2017, 8, 18)
-#d1 = date(2017, 10, 26)
-#delta = d1 - d0
-#print(delta.days)
-    
-
-
-
-
-    
-
-    
-
-
-            
 
 
 
