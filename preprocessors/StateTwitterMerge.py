@@ -11,8 +11,8 @@ import datetime
 startDate = '04/01/2020'
 
 #Ending date to keep values
-endDate = '11/20/2020'
-#endDate = '05/01/2020'
+#endDate = '11/20/2020'
+endDate = '05/01/2020'
 
 #Dictionary mapping months to month strings
 monthAbbr = {
@@ -93,6 +93,30 @@ missesMapping = {
 #Iterate through every date
 for date in dates:
     print(date)
+    futureDates = []
+    #Obtain the month, day, and year of the date
+    rawDate = date.split('/')
+    month = int(rawDate[0])
+    day = int(rawDate[1])
+    year = int(rawDate[2])
+
+    d = datetime.datetime(year,month,day)
+    for i in range(1,15):
+        d += datetime.timedelta(days=1)
+        currMonth = str(d.month)
+        currYear = str(d.year)
+        currDay = str(d.day)
+        if len(currMonth) == 1:
+            currMonth = "0" + currMonth 
+        if len(currDay) == 1:
+            currDay = "0" + currDay
+        newFutureDate = currMonth + "/" + currDay + "/" + currYear
+        if newFutureDate <= endDate:
+            futureDates.append(newFutureDate)
+
+    print(futureDates)
+
+
     stateCount = {}
 
     #Find the corresponding twitter file for the date
@@ -165,25 +189,10 @@ for date in dates:
         tweetCount = stateCount[state]
         df.loc[(df["submission_date"] == date) & (df["state"]==state), "tweetCount"] = tweetCount
 
-        #Obtain the month, day, and year of the date
-        rawDate = date.split('/')
-        month = int(rawDate[0])
-        day = int(rawDate[1])
-        year = int(rawDate[2])
+        #Add the tweet count to the next 14 days
+        for currDate in futureDates:
+            df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "twoWeekTweetSum"] += tweetCount
 
-        d = datetime.datetime(year,month,day)
-        for i in range(1,15):
-            d += datetime.timedelta(days=1)
-            currMonth = str(d.month)
-            currYear = str(d.year)
-            currDay = str(d.day)
-            if len(currMonth) == 1:
-                currMonth = "0" + currMonth 
-            if len(currDay) == 1:
-                currDay = "0" + currDay
-            currDate = currMonth + "/" + currDay + "/" + currYear
-            if currDate <= endDate:
-                df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "twoWeekTweetSum"] += tweetCount
             
 
                     
