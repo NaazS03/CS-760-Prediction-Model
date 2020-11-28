@@ -36,7 +36,7 @@ monthAbbr = {
 
 #Import the data of COVID cases every day by state
 stateDateFileName = '../data/United_States_COVID-19_Cases_and_Deaths_by_State_over_Time/United_States_COVID-19_Cases_and_Deaths_by_State_over_Time.csv'
-df = pd.read_csv(stateDateFileName, header=0, usecols=[0,1,3,4,5,6], delimiter=",")
+df = pd.read_csv(stateDateFileName, header=0, usecols=[0,1,2,5,7], delimiter=",")
 
 #Remove rows that are not between the start and end dates specified
 df = df[(df['submission_date'] >= startDate) & (df['submission_date'] <= endDate)]
