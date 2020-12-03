@@ -31,6 +31,17 @@ for _ in range(k):
 
     # Use the model and standard deviation on training data to generate confidence intervals for predictions
     y_predictions = reg.predict(X_test)
+
+    mae = 0
+    for i in range(0, len(y_predictions)):
+        prediction = y_predictions[i]
+        actual = y_train[i]
+    
+        error = abs(actual - prediction)
+        mae = mae + error
+    mae = mae / len(y_predictions)
+    print(mae)
+
     y_prediction_intervals = mhf.gen_confidence_intervals(means=y_predictions, std_dev=std_dev_train)
 
     # Evaluate the accuracy of the model on this training fold and store the accuracy score
