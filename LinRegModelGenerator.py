@@ -46,7 +46,9 @@ for _ in range(k):
 
     # Evaluate the accuracy of the model on this training fold and store the accuracy score
     accuracy = mhf.eval_accuracy(y_test=y_test, y_prediction_intervals=y_prediction_intervals)
+
     cross_validation_accuracy_scores.append(accuracy)
+
     regs.append(reg)
     std_deviations.append(std_dev_train)
 
