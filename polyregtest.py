@@ -3,6 +3,7 @@ import pandas as pd
 import time
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PolynomialFeatures
 from joblib import dump
 
 import ModelHelperFunctions as mhf
@@ -14,6 +15,8 @@ start_time = time.time()
 df = pd.read_csv('data/stateDate.csv', header=0, delimiter=",")
 y = df["new_death"].to_numpy()
 X = df.drop("new_death", axis=1).to_numpy()
+poly = PolynomialFeatures(degree=4)
+X = poly.fit_transform(X)
 k = 10
 cross_validation_accuracy_scores = []
 regs = []
@@ -48,7 +51,7 @@ for _ in range(k):
     accuracy = mhf.eval_accuracy(y_test=y_test, y_prediction_intervals=y_prediction_intervals)
 
     cross_validation_accuracy_scores.append(accuracy)
-
+    #print(reg.coef_)
     regs.append(reg)
     std_deviations.append(std_dev_train)
 

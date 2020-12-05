@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import time
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from joblib import dump
 
@@ -26,7 +26,7 @@ for _ in range(k):
     # Split data into test and training data then train model and calculate standard deviation
     # of predictions on training data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.10, shuffle=True)
-    reg = LinearRegression().fit(X_train, y_train)
+    reg = RandomForestRegressor().fit(X_train, y_train)
     std_dev_train = np.sqrt(sum((reg.predict(X_train) - y_train) ** 2) / len(y_train))
 
     # Use the model and standard deviation on training data to generate confidence intervals for predictions
@@ -48,7 +48,7 @@ for _ in range(k):
     accuracy = mhf.eval_accuracy(y_test=y_test, y_prediction_intervals=y_prediction_intervals)
 
     cross_validation_accuracy_scores.append(accuracy)
-
+    #print(reg.coef_)
     regs.append(reg)
     std_deviations.append(std_dev_train)
 
