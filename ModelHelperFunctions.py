@@ -7,7 +7,8 @@ def gen_confidence_intervals(means, std_dev):
     :param std_dev: The standard deviation on the training set of data
     :return: a list of confidence intervals
     """
-    ppf = norm.ppf(0.975, loc=0, scale=1)
+    # ppf = norm.ppf(0.975, loc=0, scale=1)
+    ppf = norm.ppf(0.95, loc=0, scale=1)
     interval_value = std_dev * ppf
     confidence_intervals = []
 
@@ -18,6 +19,32 @@ def gen_confidence_intervals(means, std_dev):
 
     return confidence_intervals
 
+def gen_margin_of_error_intervals(predictions):
+    error_intervals = []
+
+    for prediction in predictions:
+        interval_value = 0.25 * prediction
+        upper = prediction + interval_value
+        lower = prediction - interval_value
+        error_intervals.append((lower, upper))
+
+    return error_intervals
+
+def eval_accuracy2(y_test, y_predictions):
+    count_correct = 0.0
+    y_test_intervals = gen_margin_of_error_intervals(y_test)
+    num_test_samples = len(y_test)
+
+    for sample_index in range(num_test_samples):
+        y_interval = y_test_intervals[sample_index]
+        y_lower_bound = y_interval[0]
+        y_upper_bound = y_interval[1]
+        y_prediction = y_predictions[sample_index]
+
+        if y_lower_bound <= y_prediction and y_prediction <= y_upper_bound:
+            count_correct+=1
+
+    return count_correct / num_test_samples
 
 def eval_accuracy(y_test, y_prediction_intervals):
     """

@@ -14,8 +14,8 @@ start_time = time.time()
 df = pd.read_csv('data/stateDate.csv', header=0, delimiter=",")
 y = df["new_death"].to_numpy()
 X = df.drop("new_death", axis=1).to_numpy()
-k = 5 #10
-max_depth = 1
+k = 10
+max_depth = 5
 cross_validation_accuracy_scores = []
 decision_trees = []
 std_deviations = []
@@ -32,10 +32,12 @@ for _ in range(k):
 
     # Use the model and standard deviation on training data to generate confidence intervals for predictions
     y_predictions = d_tree.predict(X_test)
-    y_prediction_intervals = mhf.gen_confidence_intervals(means=y_predictions, std_dev=std_dev_train)
+    # y_prediction_intervals = mhf.gen_confidence_intervals(means=y_predictions, std_dev=std_dev_train)
+    # y_prediction_intervals = mhf.gen_margin_of_error_intervals(predictions=y_predictions)
 
     # Evaluate the accuracy of the model on this training fold and store the accuracy score
-    accuracy = mhf.eval_accuracy(y_test=y_test, y_prediction_intervals=y_prediction_intervals)
+    # accuracy = mhf.eval_accuracy(y_test=y_test, y_prediction_intervals=y_prediction_intervals)
+    accuracy = mhf.eval_accuracy2(y_test=y_test, y_predictions=y_predictions)
     cross_validation_accuracy_scores.append(accuracy)
     decision_trees.append(d_tree)
     std_deviations.append(std_dev_train)
