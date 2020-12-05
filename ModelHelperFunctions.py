@@ -1,5 +1,3 @@
-from scipy.stats import norm
-
 def gen_confidence_intervals(means, std_dev):
     """
     Generates a list of confidence intervals
@@ -7,8 +5,9 @@ def gen_confidence_intervals(means, std_dev):
     :param std_dev: The standard deviation on the training set of data
     :return: a list of confidence intervals
     """
-    # ppf = norm.ppf(0.975, loc=0, scale=1)
-    ppf = norm.ppf(0.95, loc=0, scale=1)
+    from scipy.stats import norm
+    ppf = norm.ppf(0.975, loc=0, scale=1)
+    # ppf = norm.ppf(0.95, loc=0, scale=1)
     interval_value = std_dev * ppf
     confidence_intervals = []
 
@@ -17,20 +16,21 @@ def gen_confidence_intervals(means, std_dev):
         lower = mean - interval_value
         confidence_intervals.append((lower, upper))
 
-    return confidence_intervals
+    return confidence_intervals,interval_value
 
-def gen_margin_of_error_intervals(predictions):
+def gen_margin_of_error_intervals(values):
     error_intervals = []
-
-    for prediction in predictions:
-        interval_value = 0.25 * prediction
-        upper = prediction + interval_value
-        lower = prediction - interval_value
+    margin_of_error = 0.1
+    for value in values:
+        interval_value = margin_of_error * value
+        upper = value + interval_value
+        lower = value - interval_value
         error_intervals.append((lower, upper))
 
     return error_intervals
 
-def eval_accuracy2(y_test, y_predictions):
+def eval_accuracy_margin_of_error_from_actual(y_test, y_predictions):
+    import numpy as np
     count_correct = 0.0
     y_test_intervals = gen_margin_of_error_intervals(y_test)
     num_test_samples = len(y_test)
@@ -44,9 +44,9 @@ def eval_accuracy2(y_test, y_predictions):
         if y_lower_bound <= y_prediction and y_prediction <= y_upper_bound:
             count_correct+=1
 
-    return count_correct / num_test_samples
+    return np.round(count_correct / num_test_samples,2)
 
-def eval_accuracy(y_test, y_prediction_intervals):
+def eval_accuracy_actual_within_confidence_interval(y_test,y_predictions,std_dev):
     """
     Returns the percent of correct predictions on the provided test set.
     Predictions are correct if the actual label lies within the confidence interval
@@ -54,8 +54,11 @@ def eval_accuracy(y_test, y_prediction_intervals):
     :param y_prediction_intervals: a list of prediction intervals
     :return: the percent of correct predictions
     """
+    import numpy as np
     count_correct = 0.0
     num_test_samples = len(y_test)
+    y_prediction_intervals, interval_value = gen_confidence_intervals(y_predictions,std_dev)
+
     for sample_index in range(num_test_samples):
         y_actual = y_test[sample_index]
         y_prediction_interval = y_prediction_intervals[sample_index]
@@ -65,7 +68,7 @@ def eval_accuracy(y_test, y_prediction_intervals):
         if lower_bound <= y_actual and y_actual <= upper_bound:
             count_correct+=1
 
-    return count_correct / num_test_samples
+    return np.round(count_correct / num_test_samples,2),interval_value
 
 def convertStateAbbrToFips(abbr):
     import us
