@@ -1,3 +1,34 @@
+def gen_rmse(yTest, yPred):
+    """
+    Calculates the root mean squared error
+    :param yTest: Test data labels
+    :param yPred: Prediction data labels
+    :return: The root mean squared error
+    """
+    from sklearn.metrics import mean_squared_error
+    import numpy as np
+
+    mse = mean_squared_error(yTest, yPred)
+    rmse = np.sqrt(mse)
+    return rmse
+
+def gen_mae(yTest, yPred):
+    """
+    Calculates the mean absolute error
+    :param yTest: Test data labels
+    :param yPred: Prediction data labels
+    :return: The mean absolute error
+    """
+    mae = 0
+    for i in range(0, len(yPred)):
+        prediction = yPred[i]
+        actual = yTest[i]
+        
+        error = abs(actual - prediction)
+        mae = mae + error
+    mae = mae / len(yPred)
+    return mae
+
 def gen_confidence_intervals(means, std_dev):
     """
     Generates a list of confidence intervals
