@@ -1,3 +1,29 @@
+def getSignificantIdx(X,y):
+    import numpy as np
+    """
+    N = length(y)
+    thetaMLE = inv(X'*X)*X'*y
+    var = (y - X*thetaMLE)' * (y - X*thetaMLE) * (1/N)
+    cov = var * inv(X'*X)
+    isSignificant(i) = (thetaMLE(i) / cov(i,i)) > (3.8415)
+    """
+    significant = []
+    N =  y.size
+    xT = np.transpose(X)
+    thetaMLE = np.matmul(np.matmul(np.linalg.inv(np.matmul(xT,X)),xT),y)
+    var = (1.0/N) *np.matmul(np.transpose((y - np.matmul(X,thetaMLE))) , (y - np.matmul(X, thetaMLE)))
+    cov = var * np.linalg.inv(np.matmul(xT,X)) 
+    i = 0
+    for theta in thetaMLE:
+        if (thetaMLE[i] / cov[i][i]) > 3.8415:
+            idx = i
+            if i > 4:
+                idx = idx + 1
+            significant.append(idx)
+        i = i + 1
+    return significant
+
+
 def gen_rmse(yTest, yPred):
     """
     Calculates the root mean squared error

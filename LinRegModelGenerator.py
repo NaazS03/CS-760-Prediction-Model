@@ -17,6 +17,19 @@ X = df.drop("new_death", axis=1).to_numpy()
 f_val, p_val = feature_selection.f_regression(X,y)
 print("F values", f_val)
 
+#Calculate fscores after dropping newCaseSum
+dfDrop = df.drop("newCaseSum", axis=1)
+XDrop = dfDrop.drop("new_death", axis=1).to_numpy()
+f_val, p_val = feature_selection.f_regression(XDrop,y)
+print("F values", f_val)
+
+#Get signifcant variables for entire dataset
+significantIDX = mhf.getSignificantIdx(X,y)
+print("These indices are significant: ", significantIDX)
+
+#Get significant variables after dropping newCaseSum
+significantIDXDrop = mhf.getSignificantIdx(XDrop,y)
+print("These indices are significant (when excluding new case sum): ", significantIDXDrop)
 
 # Start a timer that we will later use to track runtime
 start_time = time.time()
@@ -35,6 +48,7 @@ permutations = [
     [0,2],
     [1,2],
     [2,4],
+    [3,6],
     [7,8],
     [0,1,2],
     [0,7,8],
@@ -43,7 +57,9 @@ permutations = [
     [0,1,2,3],
     [0,1,2,4],
     [0,1,7,8],
+    [0,1,2,3,7,8],
     [0,1,2,3,4,7,8],
+    [0,1,2,4,6,7,8],
     [0,1,2,3,4,6,7,8]
 ]
 

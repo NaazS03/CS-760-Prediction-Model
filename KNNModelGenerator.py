@@ -65,5 +65,5 @@ for k_2 in num_neighbors:
     print("Average CI interval =", np.round(sum(ci_margins) / len(ci_margins), 0))
     print("Margin of Error Cross validation scores:", cross_validation_me_accuracy_scores)
     print("Average ME accuracy =",
-          np.round(sum(cross_validation_me_accuracy_scores) / len(cross_validation_me_accuracy_scores), 2))
+          np.round(sum(cross_validation_me_accuracy_scores) / len(cross_validation_me_accuracy_scores), 3))
     print()
