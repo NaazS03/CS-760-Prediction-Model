@@ -7,3 +7,4 @@ twitter_data_processing/tweet_logs/
 *.csv
 *.json
 __pycache__/
+combinationGenerator.py
