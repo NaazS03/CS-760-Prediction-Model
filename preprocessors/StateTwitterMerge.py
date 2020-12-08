@@ -41,7 +41,8 @@ df = pd.read_csv(stateDateFileName, header=0, usecols=[0,1,2,5,7,10], delimiter=
 #Remove rows that are not between the start and end dates specified
 df = df[(df['submission_date'] >= startDate) & (df['submission_date'] <= endDate)]
 
-#Add tweet count column
+#Add tweet count, tweet sum, and new case sum column
+df["newCaseSum"] = 0
 df["tweetCount"] = 0
 df["twoWeekTweetSum"] = 0
 
@@ -90,6 +91,8 @@ allTweets = {}
 with open("../data/tweet_logs/allTweets.json") as json_file: 
     allTweets = json.load(json_file) 
 
+#List of all unique locations considered
+uniqueStates = df['state'].unique()
 
 #Iterate through every date
 for date in dates:
@@ -166,6 +169,7 @@ for date in dates:
                         stateCount[state] = stateCount[state] + 1
                     else:
                         stateCount[state] = 1
+
     #We now have the tweet count for a specific date
     for state in stateCount:
         #Store the tweet count in the correct cell
@@ -175,7 +179,25 @@ for date in dates:
         #Add the tweet count to the next 14 days
         for currDate in futureDates:
             df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "twoWeekTweetSum"] += tweetCount
+    
+    #Calculate the 14-day sum of new cases
+    for state in uniqueStates:
+        newCaseNum = (df.loc[(df["submission_date"] == date) & (df["state"]==state), "new_case"])
+        if len(newCaseNum.values) < 1:
+            newCaseNum = 0
+        else:
+            newCaseNum = newCaseNum.values[0]
+        for currDate in futureDates:
+            df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "newCaseSum"] += newCaseNum
 
+
+#Convert the states to IDs
+stateAbbrMapping = us.states.mapping('abbr','fips')
+df["state"] = [stateAbbrMapping[x] for x in df["state"]]
+
+#Convert to dates to timestamps
+df["submission_date"] = [(pd.to_datetime(x) -  pd.Timestamp("1970-01-01")) // pd.Timedelta('1s')
+                         for x in df["submission_date"]]
 
 #Output the final dataframe for analysis
 df.to_csv("../data/stateDate.csv", index=False)
