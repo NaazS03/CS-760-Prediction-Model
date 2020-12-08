@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 import time
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree import DecisionTreeRegressor, plot_tree, export_text
 from sklearn.model_selection import train_test_split
-from joblib import dump
+import matplotlib.pyplot as plt
 
 import ModelHelperFunctions as mhf
 
@@ -17,7 +17,6 @@ X = df.drop("new_death", axis=1).to_numpy()
 
 k = 10
 max_depths = [x for x in range(1,11)]
-
 for max_depth in max_depths:
     print("max_depth =", max_depth)
     cross_validation_ci_accuracy_scores = []
@@ -45,15 +44,14 @@ for max_depth in max_depths:
         ci_margins.append(ci_margin)
         cross_validation_me_accuracy_scores.append(accuracy_me)
 
-        # end_fold_time = time.time()
-        # fold_run_time = end_fold_time - start_fold_time
-        # print("Runtime of Single Fold =", fold_run_time, "(s)")
+    # start of Tree visualizing code
+    # r = export_text(d_tree)
+    # print(r)
+    # fig = plt.figure(figsize=(100,80))
+    # _ = plot_tree(d_tree, filled=True)
+    # fig.savefig("decision_tree_depth_{}".format(max_depth))
 
-
-    # # End of cross validation timer
-    # end_time = time.time()
-    # run_time = end_time - start_time
-    # print("Total Runtime of Cross Validation =", run_time, "(s)")
+    # start Output for each decision tree
     print("Confidence Interval Cross validation scores:", cross_validation_ci_accuracy_scores)
     print("CI interval margin =", np.round(ci_margins,0))
     print("Average CI accuracy =",
@@ -63,6 +61,3 @@ for max_depth in max_depths:
     print("Average ME accuracy =",
           np.round(sum(cross_validation_me_accuracy_scores) / len(cross_validation_me_accuracy_scores), 2))
     print()
-
-    #Store trained tree as a file for quick running later
-    # dump(d_tree, "Decision_Tree_Death_Count_Projection.joblib")
