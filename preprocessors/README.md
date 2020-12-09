@@ -1,8 +1,7 @@
 <h1>Dataset Creation & Processing</h1>
-We provide the completed dataset in the `/data` folder. However this folder contains details on how to recreate or extend the dataset, which we created by stitching together Twitter data with data from the CDC. The process to gain access to both datasets and also to run the scripts to create a usable dataset are outlined below:
+We provide the completed dataset in the [/data](../data) folder. However this folder contains details on how to recreate or extend the dataset, which we created by stitching together Twitter data with data from the CDC. The process to gain access to both datasets and also to run the scripts to create a usable dataset are outlined below:
 
-1. Twitter API is extremely easy to use. Got it figured out and I know how to get the data we need. You should both get Twitter developer accounts here: https://developer.twitter.com/en/apply-for-access
-I roughly explained the project in terms of how Twitter was involved, just that we want to aggregate data from an IEEE dataport dataset based on location and that it's about COVID and that it's a course project, etc. Got instantly approved.
+1. You need access to the Twitter API in order to hydrate the tweets. You should both get Twitter developer accounts here: https://developer.twitter.com/en/apply-for-access
 *NOTE: once you get your developer account, you will be given some keys and such. Those ethically should not be pushed to the repo, so save them somewhere... you need them in step 3!*
 
 2. Install twarc, which is the python library to interface with the twitter API:
@@ -17,7 +16,7 @@ python3 -m pip install twarc
 twarc configure
 ```
 
-It will ask you for the keys you gave. Will also ask if you want to use twitter to validate or manually do it each time (I told it to use Twitter and there was a very easy step to authorize that)
+It will ask you for the keys you were given.
 
 4. Also make sure you have pandas installed
 
