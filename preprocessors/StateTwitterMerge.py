@@ -1,3 +1,8 @@
+'''
+This script processes an already pre-hydrated twitter json file and merges this data with a CDC State COVID csv file
+'''
+
+
 import pandas as pd #Dataset handling
 import us #US States library
 import calendar #Handles month abbreviations
