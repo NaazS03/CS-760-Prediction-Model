@@ -3,7 +3,7 @@
 
 1. Prepare the data. Note that you need `data/United_States_COVID-19_Cases_and_Deaths_by_State_over_Time.zip` to be unzipped in the `/data` folder and `/data/tweet_logs/tweet_logs_data_apr01_nov20.zip` to be unzipped in the `/data/tweet_logs` folder. If you would like to access the datasets from their source to extend them, please see the bottom of the document.
 
-2. You need access to the Twitter API in order to hydrate the tweets. You should both get Twitter developer accounts here: https://developer.twitter.com/en/apply-for-access
+2. You need access to the Twitter API in order to hydrate the tweets. You should get a Twitter developer account here: https://developer.twitter.com/en/apply-for-access
 *NOTE: once you get your developer account, you will be given some keys and such. Those ethically should not be pushed to the repo, so save them somewhere... you need them in step 3!*
 
 3. Install twarc, which is the python library to interface with the twitter API:
