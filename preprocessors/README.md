@@ -1,3 +1,5 @@
+<h1>How to Get Tweet Information from Twitter:</h1>
+
 1. Twitter API is extremely easy to use. Got it figured out and I know how to get the data we need. You should both get Twitter developer accounts here: https://developer.twitter.com/en/apply-for-access
 I roughly explained the project in terms of how Twitter was involved, just that we want to aggregate data from an IEEE dataport dataset based on location and that it's about COVID and that it's a course project, etc. Got instantly approved.
 *NOTE: once you get your developer account, you will be given some keys and such. Those ethically should not be pushed to the repo, so save them somewhere... you need them in step 3!*

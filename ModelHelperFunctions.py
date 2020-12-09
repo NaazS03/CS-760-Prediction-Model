@@ -1,5 +1,4 @@
 def getSignificantIdx(X,y):
-    import numpy as np
     """
     N = length(y)
     thetaMLE = inv(X'*X)*X'*y
@@ -7,6 +6,7 @@ def getSignificantIdx(X,y):
     cov = var * inv(X'*X)
     isSignificant(i) = (thetaMLE(i) / cov(i,i)) > (3.8415)
     """
+    import numpy as np
     significant = []
     N =  y.size
     xT = np.transpose(X)
@@ -63,8 +63,8 @@ def gen_confidence_intervals(means, std_dev):
     :return: a list of confidence intervals
     """
     from scipy.stats import norm
-    ppf = norm.ppf(0.975, loc=0, scale=1)
-    # ppf = norm.ppf(0.95, loc=0, scale=1)
+    ppf = norm.ppf(0.975, loc=0, scale=1) # - 95% confidence
+    # ppf = norm.ppf(0.95, loc=0, scale=1) - 90% confidence
     interval_value = std_dev * ppf
     confidence_intervals = []
 
@@ -76,6 +76,12 @@ def gen_confidence_intervals(means, std_dev):
     return confidence_intervals,interval_value
 
 def gen_margin_of_error_intervals(values):
+    """
+    Generates intervals based on the values given.
+    The intervals will be + or - a certain acceptable amount of margin of error
+    :param values:
+    :return:
+    """
     error_intervals = []
     margin_of_error = 0.1
     for value in values:
@@ -87,6 +93,15 @@ def gen_margin_of_error_intervals(values):
     return error_intervals
 
 def eval_accuracy_margin_of_error_from_actual(y_test, y_predictions):
+    """
+    Evaluates the percent of correct predictions.
+    From each prediction an interval is made and if the actual result is within the prediction interval
+    then the prediction is evaluated as correct.
+    The interval is determined as margin of error off the true value
+    :param y_test:
+    :param y_predictions:
+    :return:
+    """
     import numpy as np
     count_correct = 0.0
     y_test_intervals = gen_margin_of_error_intervals(y_test)
@@ -105,11 +120,13 @@ def eval_accuracy_margin_of_error_from_actual(y_test, y_predictions):
 
 def eval_accuracy_actual_within_confidence_interval(y_test,y_predictions,std_dev):
     """
-    Returns the percent of correct predictions on the provided test set.
-    Predictions are correct if the actual label lies within the confidence interval
-    :param y_test:  a list of test labels
-    :param y_prediction_intervals: a list of prediction intervals
-    :return: the percent of correct predictions
+    Evaluates the percent of correct predictions.
+    From each prediction an interval is made and if the actual result is within the prediction interval
+    then the prediction is evaluated as correct.
+    The interval is determined as confidence interval
+    :param y_test:
+    :param y_predictions:
+    :return:
     """
     import numpy as np
     count_correct = 0.0
@@ -128,19 +145,43 @@ def eval_accuracy_actual_within_confidence_interval(y_test,y_predictions,std_dev
     return np.round(count_correct / num_test_samples,2),interval_value
 
 def convertStateAbbrToFips(abbr):
+    """
+    A function that can help convert the readable form of data into something the model can understand
+    not used as a part of model training
+    :param abbr:
+    :return:
+    """
     import us
     stateAbbrMapping = us.states.mapping('abbr', 'fips')
     return stateAbbrMapping[abbr]
 
 def convertFipstoAbbr(fips):
+    """
+    A function that can help convert a prediction from our model back to a more readable form.
+    not used as a part of model training
+    :param fips:
+    :return:
+    """
     import us
     stateFipsMapping = us.states.mapping('fips', 'abbr')
     return stateFipsMapping[fips]
 
 def convertDateToUNIX(date):
+    """
+    A function that can help convert the readable form of data into something the model can understand
+    not used as a part of model training
+    :param date:
+    :return:
+    """
     import pandas as pd
     return (pd.to_datetime(date) - pd.Timestamp("1970-01-01")) // pd.Timedelta('1s')
 
 def convertUNIXToDate(unix):
+    """
+    A function that can help convert a prediction from our model back to a more readable form.
+    not used as a part of model training
+    :param unix:
+    :return:
+    """
     from datetime import datetime
     return datetime.fromtimestamp(unix)
