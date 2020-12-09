@@ -28,4 +28,8 @@ python3 -m pip install us
 
 6. Make an IEEE account (free) so that you can access the data files here: https://ieee-dataport.org/open-access/coronavirus-covid-19-geo-tagged-tweets-dataset
 
-7. DESCRIBE HOW TO RUN THESE SCRIPTS
+7. Once all the required data is in the /data folder as .csv files then you can run the preprocessors. Note that you need data/United_States_COVID-19_Cases_and_Deaths_by_State_over_Time.zip to be unzipped in the /data folder and /data/tweet_logs/tweet_logs_data_apr01_nov20.zip to be unzipped in the /data/tweet_logs folder.
+
+8. Run the TwitterHydrator.py preprocessor first and then run the StateTwitterMerge.py. TwitterHydrator.py will get the information we are interested in from the tweet ids stored in /data/tweet_logs. StateTwitterMerge.py will merge the CDC gathered COVID-19 data with the twitter information we gathered.
+
+9. Now all the data is fully preprocessed and either of the model generatory python files can be ran successfully.
