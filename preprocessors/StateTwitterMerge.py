@@ -1,11 +1,10 @@
-from twarc import Twarc #so we can access the Twitter API
-import pandas as pd #so we can handle the dataset
-import us #so we can process the US states easily
-import calendar #so we can process month abbreviations
-import fnmatch
+import pandas as pd #Dataset handling
+import us #US States library
+import calendar #Handles month abbreviations
+import fnmatch #Matching files
 import os
-import datetime
-import json
+import datetime #Timestamps
+import json #Process json
 
 
 #Starting date to keep values
@@ -13,7 +12,6 @@ startDate = '04/01/2020'
 
 #Ending date to keep values
 endDate = '11/20/2020'
-#endDate = '04/03/2020'
 
 #Dictionary mapping months to month strings
 monthAbbr = {
@@ -41,11 +39,9 @@ df = pd.read_csv(stateDateFileName, header=0, usecols=[0,1,2,5,7,10], delimiter=
 #Remove rows that are not between the start and end dates specified
 df = df[(df['submission_date'] >= startDate) & (df['submission_date'] <= endDate)]
 
-#Add tweet count, tweet sum, and new case sum column
-df["newCaseSum"] = 0
+#Add tweet count and 14-day tweet sum
 df["tweetCount"] = 0
 df["twoWeekTweetSum"] = 0
-
 
 
 ###AGGREGATE TWITTER DATA
@@ -53,11 +49,9 @@ df["twoWeekTweetSum"] = 0
 #Get every date as a list
 dates = df['submission_date'].unique()
 
-
 #Merge NY with NYC
 df.loc[df["state"].str.contains('NY'), "state"] = 'NY'
 df = df.groupby(["submission_date", "state"], as_index=False).agg("sum")
-
 
 #Remove US territories other than Puerto Rico and Guam
 weirdLocations = [
@@ -90,9 +84,6 @@ missesMapping = {
 allTweets = {}
 with open("../data/tweet_logs/allTweets.json") as json_file: 
     allTweets = json.load(json_file) 
-
-#List of all unique locations considered
-uniqueStates = df['state'].unique()
 
 #Iterate through every date
 for date in dates:
@@ -127,9 +118,9 @@ for date in dates:
     stateCount = {}
 
     tweetsToday = allTweets[date]
+    
     #Iterate through every tweet in the log
     for tweet in tweetsToday:
-
         #Check to see if tweet originated from the US
         if (tweet["coordinates"] 
         and tweet["place"] is not None 
@@ -138,18 +129,18 @@ for date in dates:
             full_name = tweet["place"]["full_name"]
             state = ''
 
-            #Washington, DC is included in the dataset, and obviously conflicts with Washington state, so we hadnle this case first
+            #Washington DC can conflict with Washington State and must be handled seperately
             if full_name == 'Washington, DC':
                 state = 'DC'
             else:
-                #find out what state it is
+                #Find out what state it is
                 matched = False
-                #iterate through each abbreviation and see if it matches
+                #Iterate through each abbreviation and see if it matches
                 for abbr in stateAbbreviations:
                     if abbr in full_name:
                         state = abbr
                         matched = True
-                #if a match before was not found, then iterate through the state names
+                #If a match before was not found, then iterate through the state names
                 if matched == False:
                     for name in stateNames:
                         if name in full_name:
@@ -179,16 +170,6 @@ for date in dates:
         #Add the tweet count to the next 14 days
         for currDate in futureDates:
             df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "twoWeekTweetSum"] += tweetCount
-    
-    #Calculate the 14-day sum of new cases
-    for state in uniqueStates:
-        newCaseNum = (df.loc[(df["submission_date"] == date) & (df["state"]==state), "new_case"])
-        if len(newCaseNum.values) < 1:
-            newCaseNum = 0
-        else:
-            newCaseNum = newCaseNum.values[0]
-        for currDate in futureDates:
-            df.loc[(df["submission_date"] == currDate) & (df["state"]==state), "newCaseSum"] += newCaseNum
 
 
 #Convert the states to IDs
