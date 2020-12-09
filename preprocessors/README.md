@@ -1,9 +1,6 @@
 <h1>Dataset Creation & Processing</h1>
-We provide the completed dataset in the `/data` folder from the main repo.
+We provide the completed dataset in the `/data` folder from the main repo. This folder contains details on how to recreate or extend the dataset, which we created by stitching together Twitter data with data from the CDC. The process to gain access to both datasets is outlined below and also to run the scripts to create a usable dataset are outlined below.
 
-This folder contains details on how to recreate or extend the dataset, which we created by stitching together Twitter data with data from the CDC. The process to gain access to both datasets is outlined below and also to run the scripts to create a usable dataset are outlined below. There are two options.
-
-<h3>To simply re-create the dataset we provide</h3>
 1. Prepare the data. Note that you need `data/United_States_COVID-19_Cases_and_Deaths_by_State_over_Time.zip` to be unzipped in the `/data` folder and `/data/tweet_logs/tweet_logs_data_apr01_nov20.zip` to be unzipped in the `/data/tweet_logs` folder. If you would like to access the datasets from their source to extend them, please see the bottom of the document.
 
 1. You need access to the Twitter API in order to hydrate the tweets. You should both get Twitter developer accounts here: https://developer.twitter.com/en/apply-for-access
