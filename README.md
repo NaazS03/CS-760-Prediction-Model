@@ -9,4 +9,4 @@ To create and view the results of our model follow the steps below.
 
 1. Go to the `/data` folder and unzip the file in their called `stateTwitter.zip`. This should create a .csv file in the data folder called `stateDate.csv`. The stateTwitter.zip file is a zipped version of the training data for the models we generate.
 
-2. Run `DecisionTreeModelGenerator.py` or `LinRegModelGenerator.py`. In the terminal, you will see the output of 10-fold validation run on the model with a variety of configuration parameters. For more information about how the models are generated, please view the comments in the python files mentioned earlier.
+2. Run `DecisionTreeModelGenerator.py` or `LinRegModelGenerator.py`. In the terminal, you will see the output of 10-fold cross validation run on the model with a variety of configuration parameters. For more information about how the models are generated and tested, please view the comments in the python files mentioned earlier.
